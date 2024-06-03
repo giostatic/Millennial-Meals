@@ -1,0 +1,33 @@
+@import url(../stylesheet.css);
+
+#description{
+    text-align: center;
+}
+
+img{
+    border-radius: 5%;
+    margin: auto;
+    min-width: 250px;
+    max-width: 350px;
+    min-height: 100px;
+}
+
+div#ingredients,#directions{
+    text-align: left;
+    margin:5px auto 5px auto;
+    padding: 5px auto 5px auto;
+    width: 50%;
+    min-width: 350px;
+    max-width: 750px;
+
+}
+
+div#ingredients h2,#directions h2{
+    text-align: center;
+}
+
+[for="ingredients"] li, [for="directions"] li{
+    padding-left: 10px;
+    margin: 5px auto;
+}
+

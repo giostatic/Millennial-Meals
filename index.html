@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>Hungry Hungry Hawaii</title>
+    <link rel="icon" type="img/x-icon" href="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWN2YjNvaHoyMWd1ZW5idjhuYW9uZm5oemZyMmJ5dWRlaHR4eGk2ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKRVxl0KPW1ePgQ/giphy.gif">
+</head>
+<body>
+    <header>
+        <nav id="nav-bar">
+            <a href="index.html"><h1 id="logo">Hungry Hungry Hawaii</h1></a>
+            <ul>
+                <li class='links'><a href="index.html">Home</a></li>
+                <li class='links'><a href=#breakfast>All Recipes</a></li>
+                <li class='links'><a href="#lunch">Poultry</a></li>
+                <li class='links'><a href="#dinner">Beef</a></li>
+                <li class='links'><a href="#dinner">Pork</a></li>
+                <li class='links'><a href="#dinner">Plant-Based</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+    <section id="protein-base">
+        <div class="slider-image">
+            <a href="recipes/ribs.html">
+                <img src="recipe-images/Chicken-header.png" alt="Poultry dishes" title="Poultry dishes">
+                <div class="slider-overlay">Poultry</div>
+            </a>
+        </div>
+        <div class="slider-image"> 
+            <a href="recipes/ribs.html">
+                <img src="recipe-images/Beef-header.png" alt="Beef Dishes" title="Beef Dishes">
+                <div class="slider-overlay">Beef</div>
+            </a>
+        </div>
+        <div class="slider-image"> 
+            <a href="recipes/ribs.html">
+                <img src="recipe-images/Pork-header.png" alt="Pork Dishes" title="Pork Dishes">
+                <div class="slider-overlay">Pork</div>
+            </a>
+        </div>
+        <div class="slider-image"> 
+            <a href="recipes/ribs.html">
+                <img src="recipe-images/plant-based-header.png" alt="Plant-Based Dishes" title="Plant-Based Dishes">
+                <div class="slider-overlay">Plant-Based</div>
+        </a>
+        </div>
+    </section>
+    <section id="random-recipe">
+        <h2>Don't know what to pick?</h2>
+        <button onclick=goSomewhere(); return false; target="_blank">Click here to get a random recipe</button>
+        <script src="main.js"></script>
+    </section>
+    </main>
+</body>
+</html>
