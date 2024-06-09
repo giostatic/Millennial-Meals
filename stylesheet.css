@@ -19,6 +19,7 @@ body{
 }
 
 /*  nav bar */
+
 header{
   padding:0;
   width: 100%;
@@ -39,7 +40,7 @@ header h1{
   color: black;
   display: inline-block;
   margin-left: 20px;
-  top: 16px;
+  top: 8px;
   position: relative;
 }
 
@@ -49,7 +50,7 @@ header h1:hover{
   transition: background-color 0.3s ease-in-out;
 }
 
-#nav-bar ul {
+.nav-bar ul {
   display: flex;
   list-style-type: none;
   padding: 16px 0;
@@ -59,22 +60,17 @@ header h1:hover{
   position: relative;
 }
 
-#nav-bar li {
-  display: inline-block;
+#nav-items li {
   padding: 0 10px;
   margin: 0 0;
-  border-right: solid;
+  text-align: center;
 }
 
-#nav-bar li:last-child {
-  border-right: none;
-}
-
-.links a{
+.nav-item a{
   color: black;
 }
 
-.links:hover{
+.nav-item:hover{
   background-color: rgba(0,0,0,0.19);
   text-decoration: none;
   transition: background-color 0.3s ;
