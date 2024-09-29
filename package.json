@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "create-react-app": "^5.0.1",
-    "create-react-native-app": "^4.0.0"
+    "create-react-native-app": "^4.0.0",
+    "react": "^18.3.1",
+    "react-redux": "^9.1.2"
   }
 }
