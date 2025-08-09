@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import SubHeader from '../components/SubHeader'
 import "../features/restaurants/styles.css";
 // If you use react-bootstrap, uncomment the next line:
