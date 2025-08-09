@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^5.3.7",
     "cra-template": "1.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1"
+    "react-router-dom": "^7.8.0",
+    "react-scripts": "5.0.1",
+    "reactstrap": "^9.2.3",
+    "web-vitals": "^5.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

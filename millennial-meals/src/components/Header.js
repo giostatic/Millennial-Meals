@@ -8,8 +8,8 @@ import {
     NavItem,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
-import NucampLogo from '../app/assets/img/logo.png';
-import UserLoginForm from '../features/user/UserLoginForm';
+import NucampLogo from '../app/assets/img/logo.jpg';
+// import UserLoginForm from '../features/user/UserLoginForm';
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -17,8 +17,13 @@ const Header = () => {
     return (
         <Navbar dark color='primary' sticky='top' expand='md'>
             <NavbarBrand className='ms-5' href='/'>
-                <img src={NucampLogo} alt='nucamp logo' className='float-start' />
-                <h1 className='mt-1'>NuCamp</h1>
+                <img
+                    src={NucampLogo}
+                    alt='nucamp logo'
+                    className='float-start'
+                    style={{ width: '5%', height: 'auto' }}
+                />
+                <h1 className='mt-1'>Millenial Meals</h1>
             </NavbarBrand>
             <NavbarToggler onClick={() => setMenuOpen(!menuOpen)}/>
             <Collapse isOpen={menuOpen} navbar>
@@ -44,7 +49,7 @@ const Header = () => {
                         </NavLink>
                     </NavItem>
                 </Nav>
-                <UserLoginForm />
+                {/* <UserLoginForm /> */}
             </Collapse>
         </Navbar>
     );

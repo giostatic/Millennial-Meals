@@ -1,5 +1,6 @@
 import SubHeader from '../components/SubHeader'
-import "../features/restaurants/styles.css";
+import { useState } from 'react';
+
 // If you use react-bootstrap, uncomment the next line:
 // import { Container } from "react-bootstrap";
 
