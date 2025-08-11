@@ -1,7 +1,20 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../features/recipes/recipes/stylesheet.css";
 
+import {
+  Button,
+  Container
+} from 'reactstrap';
+
+import { useState } from 'react';
+
+import chickenHeader from '../app/assets/img/Chicken-header.png';
+import beefHeader from '../app/assets/img/Beef-header.png';
+import porkHeader from '../app/assets/img/Pork-header.png';
+import plantBasedHeader from '../app/assets/img/plant-based-header.png';
+
 const RecipesPage = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   // Dummy goSomewhere function for the button
   const goSomewhere = () => {
     // Implement random recipe navigation logic here
@@ -10,67 +23,12 @@ const RecipesPage = () => {
 
   return (
     <>
-      <header>
-        {/* Navbar */}
-        <nav className="navbar navbar-expand-lg bg-light" id="navbar">
-          <a className="navbar-brand" href="index.html">
-            <h1>Millenial Meals</h1>
-          </a>
-          <button
-            className="navbar-toggler ms-auto"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#nav-items"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="container">
-            <div className="collapse navbar-collapse" id="nav-items">
-              <ul className="ms-auto mb-2 mb-lg-0">
-                <li className="nav-item d-lg-inline-block d-block">
-                  <a className="nav-link active" href="index.html">
-                    Home
-                  </a>
-                </li>
-                <li className="nav-item d-lg-inline-block d-block">
-                  <a className="nav-link active" href="#breakfast">
-                    All Recipes
-                  </a>
-                </li>
-                <li className="nav-item d-lg-inline-block d-block">
-                  <a className="nav-link active" href="#lunch">
-                    Poultry
-                  </a>
-                </li>
-                <li className="nav-item d-lg-inline-block d-block">
-                  <a className="nav-link active" href="#dinner">
-                    Beef
-                  </a>
-                </li>
-                <li className="nav-item d-lg-inline-block d-block">
-                  <a className="nav-link active" href="#dinner">
-                    Pork
-                  </a>
-                </li>
-                <li className="nav-item d-lg-inline-block d-block">
-                  <a className="nav-link active" href="#dinner">
-                    Plant-Based
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </header>
       <main>
         <section id="protein-base">
           <div className="slider-image">
             <a href="recipes/ribs.html">
               <img
-                src="recipe-images/Chicken-header.png"
+                src={chickenHeader}
                 alt="Poultry dishes"
                 title="Poultry dishes"
               />
@@ -80,7 +38,7 @@ const RecipesPage = () => {
           <div className="slider-image">
             <a href="recipes/ribs.html">
               <img
-                src="recipe-images/Beef-header.png"
+                src={beefHeader}
                 alt="Beef Dishes"
                 title="Beef Dishes"
               />
@@ -90,7 +48,7 @@ const RecipesPage = () => {
           <div className="slider-image">
             <a href="recipes/ribs.html">
               <img
-                src="recipe-images/Pork-header.png"
+                src={porkHeader}
                 alt="Pork Dishes"
                 title="Pork Dishes"
               />
@@ -100,7 +58,7 @@ const RecipesPage = () => {
           <div className="slider-image">
             <a href="recipes/ribs.html">
               <img
-                src="recipe-images/plant-based-header.png"
+                src={plantBasedHeader}
                 alt="Plant-Based Dishes"
                 title="Plant-Based Dishes"
               />
@@ -110,7 +68,9 @@ const RecipesPage = () => {
         </section>
         <section id="random-recipe">
           <h2>Don't know what to pick?</h2>
-          <button onClick={goSomewhere}>Click here to get a random recipe</button>
+          <Button color="primary" onClick={goSomewhere}>
+            Click here to get a random recipe
+          </Button>
         </section>
       </main>
       {/* Bootstrap JS and main.js would be included via bundler or index.html in React */}

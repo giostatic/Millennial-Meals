@@ -1,20 +1,23 @@
-export const displayRestaurants(data) {
+import { API_KEY } from "./googlePlacesApiKey";
+
+export function displayRestaurants (data) {
     // Clear any existing results
     const businessesContainer = document.getElementById('results');
     businessesContainer.innerHTML = '';
     
-    //display new results
-    data.businesses.forEach(business => {
+    // display new results (Google Places API: data.results)
+    data.results.forEach(place => {
         const businessDiv = document.createElement('div');
         businessDiv.className = `grid-item`;
-        // Construct HTML content for each result
         businessDiv.innerHTML = `
-            <h3>${business.name}</h3>
-            <img src="${business.image_url}" alt="${business.name}" />
-            <p>Rating: ${business.rating}</p>
-            <p>Categories: ${business.categories.map(category => category.title).join(', ')}</p>
-            <p>Address: ${business.location.display_address.join(', ')}</p>
-            <a href="${business.url}" target="_blank">Read more</a>`;
+            <h3>${place.name}</h3>
+            <img src="${place.photos && place.photos.length > 0 ? 
+                `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${API_KEY}` : 
+                ''}" alt="${place.name}" />
+            <p>Rating: ${place.rating || 'N/A'}</p>
+            <p>Types: ${place.types ? place.types.join(', ') : 'N/A'}</p>
+            <p>Address: ${place.vicinity || place.formatted_address || 'N/A'}</p>
+            <a href="https://www.google.com/maps/place/?q=place_id:${place.place_id}" target="_blank">Read more</a>`;
         businessesContainer.appendChild(businessDiv);
     });
-}
+};

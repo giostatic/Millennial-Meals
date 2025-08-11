@@ -1,109 +1,80 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, FormGroup, Label } from "reactstrap";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { useForm } from "react-hook-form";
 import { displayRestaurants } from "./RestaurantsPost";
+import { fetchGooglePlaces } from "./fetchPlaces";
 
-
-//need to take in user geolocation
-//global variables
-//Captures form values
-document.getElementById('searchForm').addEventListener('submit', async function(event){
-    event.preventDefault(); // Prevent the form from submitting normally
-
-    // Capture form values
-    const term = document.getElementById('categories').value.toString();
-    const location = document.getElementById('location').value.toString();
-    const radius = document.getElementById('radius').value;
-    const radiusInMeters = Math.floor(radius*1609.34).toString();
-    console.log(`Searching for: ${term} and ${location} and about ${radiusInMeters} meters`);
-    // Creates a JSON object with the form data
-    const apiEndPoint = 'https://api.yelp.com/v3/businesses/search?';
-    const url = `${apiEndPoint}location=${location}&term=${term}&radius=${radiusInMeters}&sort_by=distance&limit=20`;
-    //needed for authorization
-    const options = {
-        method: 'GET',
-        headers: {
-            Authorization: API_KEY,
-            accept: 'application/json'
-        }
-    };
-    //promise to grab the data, is async
-    try {
-        const response = await fetch(url, options);
-        if(!response.ok){
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log('Search Results:', data);
-        // Check if businesses array exists
-        if (data && Array.isArray(data.businesses)) {
-            displaySearchResults(data);
-        } else {
-            console.error('Businesses data is missing or not an array:', data);
-        }
-    } catch (error){
-        console.error('Error code:', error);
-        alert('An error occurred while fetching the search results.');
-    }
-});
 
 const RestaurantForm = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const onSubmit = async (values) => {
+        try {
+            const data = await fetchGooglePlaces(values.categories, values.location, values.radius);
+            if (data && Array.isArray(data.results)) {
+                displayRestaurants(data);
+            } else {
+                console.error('Places data is missing or not an array:', data);
+            }
+        } catch (error) {
+            console.error('Error code:', error);
+            alert('An error occurred while fetching the search results.');
+        }
+    };
 
     return (
         <>
-            <Button outline onClick={() => setModalOpen(true)}>
-                <i classname='fa fa=pencil fa-lg' /> Set Restaurant details
-            </Button>
-            <Modal isOpen={modalOpen}>
-                <ModalHeader toggle={() => setModalOpen(false)}>
-                    Set your restaurant preferences here
-                </ModalHeader>
-                <ModalBody>
-                    <Formik
-                        initialValues={{rating: undefined, author:'', commentText:''}}
-                        onSubmit={handleSubmit}
-                        validate={validateCommentForm}
-                    >
-                        <Form>
-                            <FormGroup>
-                                <Label htmlFor='categories'>Type what you what feel like eating or going to below
-                                (for example: bars, burgers, pasta, pizza, or even boba!)</Label>
-                                <Field
-                                    name='categories'
-                                    placeholder='What are ya feelin?'
-                                    className='form-control'
-                                />
-                                <ErrorMessage name='categories'>
-                                    {(msg) => <p className='text-danger'>{msg}</p>}
-                                </ErrorMessage>
-                            </FormGroup>
-                            <FormGroup>
-                               <Label htmlFor="location">Provide your location to narrow down the search to places near you.</Label>
-                               <Field
-                                    name='location'
-                                    placeholder='address, city, or zip'
-                                    className='form-control'
-                                />
-                                <ErrorMessage name='categories'>
-                                    {(msg) => <p className='text-danger'>{msg}</p>}
-                                </ErrorMessage>
-                            </FormGroup>
-                            <FormGroup>
-                               <Label htmlFor="radius">Provide how far you're wiling to go in miles (the max of the tool is 24 miles)</Label>
-                               <Field
-                                    name='radius'
-                                    placeholder='Input a number'
-                                    className='form-control'
-                                />
-                                <ErrorMessage name='radius'>
-                                    {(msg) => <p className='text-danger'>{msg}</p>}
-                                </ErrorMessage>
-                            </FormGroup>
-                        </Form>
-                    </Formik>
-                </ModalBody>
-            </Modal>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormGroup>
+                    <Label htmlFor='categories'>Type what you what feel like eating or going to below
+                        (for example: bars, burgers, pasta, pizza, or even boba!)</Label>
+                    <input
+                        {...register('categories', { required: 'Category is required' })}
+                        placeholder='What are ya feelin?'
+                        className='form-control'
+                        id='categories'
+                    />
+                    {errors.categories && (
+                        <p className='text-danger'>{errors.categories.message}</p>
+                    )}
+                </FormGroup>
+                <FormGroup>
+                    <Label htmlFor="location">Provide your location to narrow down the search to places near you.</Label>
+                    <input
+                        {...register('location', { required: 'Location is required' })}
+                        placeholder='address, city, or zip'
+                        className='form-control'
+                        id='location'
+                    />
+                    {errors.location && (
+                        <p className='text-danger'>{errors.location.message}</p>
+                    )}
+                </FormGroup>
+                <FormGroup>
+                    <Label htmlFor="radius">Provide how far you're wiling to go in miles (the max of the tool is 24 miles)</Label>
+                    <input
+                        {...register('radius', {
+                            required: 'Radius is required',
+                            min: { value: 1, message: 'Minimum is 1 mile' },
+                            max: { value: 24, message: 'Maximum is 24 miles' },
+                            valueAsNumber: true
+                        })}
+                        placeholder='Input a number'
+                        className='form-control'
+                        id='radius'
+                        type='number'
+                    />
+                    {errors.radius && (
+                        <p className='text-danger'>{errors.radius.message}</p>
+                    )}
+                </FormGroup>
+                <Button color="primary" type="submit">Search</Button>
+            </form>
         </>
     )
 }
+
+export default RestaurantForm;
+
+                          
