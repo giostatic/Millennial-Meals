@@ -1,4 +1,4 @@
-import { API_KEY } from "./googlePlacesApiKey";
+import { key } from "./apiKey";
 
 export function displayRestaurants (data) {
     // Clear any existing results
@@ -12,7 +12,7 @@ export function displayRestaurants (data) {
         businessDiv.innerHTML = `
             <h3>${place.name}</h3>
             <img src="${place.photos && place.photos.length > 0 ? 
-                `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${API_KEY}` : 
+                `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${key}` : 
                 ''}" alt="${place.name}" />
             <p>Rating: ${place.rating || 'N/A'}</p>
             <p>Types: ${place.types ? place.types.join(', ') : 'N/A'}</p>

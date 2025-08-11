@@ -4,6 +4,7 @@ import { Button, Modal, ModalHeader, ModalBody, FormGroup, Label } from "reactst
 import { useForm } from "react-hook-form";
 import { displayRestaurants } from "./RestaurantsPost";
 import { fetchGooglePlaces } from "./fetchPlaces";
+import fetchLatLng from "./fetchLocation";
 
 
 const RestaurantForm = () => {
@@ -11,7 +12,18 @@ const RestaurantForm = () => {
 
     const onSubmit = async (values) => {
         try {
-            const data = await fetchGooglePlaces(values.categories, values.location, values.radius);
+            // Simple check: if input is all digits, treat as zip; else as address/city
+            let locationObj = {};
+            if (/^\d{5}(-\d{4})?$/.test(values.location.trim())) {
+                locationObj.zip = `${values.location.trim()}, USA`; // Add country for zip
+            } else {
+                locationObj.address = values.location.trim();
+            }
+
+            const { lat, lng } = await fetchLatLng(locationObj);
+
+            const data = await fetchGooglePlaces(values.categories, { lat, lng }, values.radius);
+            console.log('Nearby search results:', data); // <-- Added console log
             if (data && Array.isArray(data.results)) {
                 displayRestaurants(data);
             } else {
@@ -77,4 +89,3 @@ const RestaurantForm = () => {
 
 export default RestaurantForm;
 
-                          
