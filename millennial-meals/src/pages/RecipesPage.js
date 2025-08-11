@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../features/recipes/recipes/stylesheet.css";
+import RecipesForm from "../features/recipes/recipesForm";
 
 import {
   Button,
@@ -70,6 +71,9 @@ const RecipesPage = () => {
           <h2>Don't know what to pick?</h2>
           <Button color="primary" onClick={goSomewhere}>
             Click here to get a random recipe
+          </Button>
+          <Button color="primary" href="/recipesForm" onClick={RecipesForm}>
+            Click here to submit your own recipe
           </Button>
         </section>
       </main>

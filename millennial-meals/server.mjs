@@ -1,12 +1,15 @@
+// Replace all instances of 'key' with 'process.env.REACT_APP_API_KEY'
+
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+import axios from 'axios';
 
 dotenv.config();
 
 const app = express();
-app.use(cors()); // <-- This must be before your routes
+app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
@@ -24,9 +27,8 @@ app.get('/api/geocode', async (req, res) => {
   try {
     const response = await fetch(url);
     const text = await response.text();
-    console.log('Google response:', text); // <-- Add this line
+    console.log('Google response:', text);
 
-    // Try to parse as JSON, otherwise return error
     try {
       const data = JSON.parse(text);
       res.json(data);
@@ -59,6 +61,18 @@ app.get('/api/places', async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch from Google Places API' });
+  }
+});
+
+// Proxy endpoint for photos
+app.get('/api/photo', async (req, res) => {
+  const { photoreference } = req.query;
+  const url = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoreference}&key=${process.env.REACT_APP_API_KEY}`;
+  try {
+    const response = await axios.get(url, { responseType: 'stream' });
+    response.data.pipe(res);
+  } catch (err) {
+    res.status(500).send('Error fetching photo');
   }
 });
 

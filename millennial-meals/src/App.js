@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Recipes from './pages/RecipesPage';
 import Restaurants from './pages/RestaurantsPage';
+import RecipesForm from './features/recipes/recipesForm';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/restaurants" element={<Restaurants />} />
+        <Route path="/recipesForm" element={<RecipesForm />} />
       </Routes>
       <Footer />
     </div>
