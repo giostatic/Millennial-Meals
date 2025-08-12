@@ -21,3 +21,15 @@ export async function fetchGooglePlaces(term, location, radius) {
     }
     return await response.json();
 }
+
+export async function fetchRestaurantsPage(nextPageToken) {
+    // For production, use your backend endpoint and pass the pagetoken
+    // Example: const url = `https://your-backend.com/api/places?pagetoken=${nextPageToken}`;
+    const url = `http://localhost:5000/api/places?pagetoken=${nextPageToken}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return await response.json();
+}

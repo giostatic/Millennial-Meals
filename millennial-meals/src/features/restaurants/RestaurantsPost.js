@@ -1,25 +1,32 @@
 import {key} from '../../components/apiKey';
 
+
 export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage) {
-    // Clear any existing results
-    const businessesContainer = document.getElementById('results');
-    businessesContainer.innerHTML = '';
-    // Add responsive grid class
-    businessesContainer.className = 'restaurants-grid';
+    // Get the main results container
+    const mainContainer = document.getElementById('results');
+    mainContainer.innerHTML = '';
 
     // Calculate page info
     const totalResults = data.results.length;
     const resultsPerPage = 20;
     const totalPages = Math.ceil(totalResults / resultsPerPage);
 
-    // Create page counter element
+    // Create page counter element (top)
     const pageCounterTop = document.createElement('div');
     pageCounterTop.className = 'restaurants-page-counter';
     pageCounterTop.textContent = `Page ${currentPage} of ${totalPages}`;
-    businessesContainer.appendChild(pageCounterTop);
+    mainContainer.appendChild(pageCounterTop);
 
-    // display new results (Google Places API: data.results)
-    (data.results.slice(0, 20)).forEach(place => {
+    // Create grid wrapper
+    const gridWrapper = document.createElement('div');
+    gridWrapper.className = 'restaurants-grid';
+
+    // Display new results (Google Places API: data.results)
+    const startIdx = (currentPage - 1) * resultsPerPage;
+    const endIdx = startIdx + resultsPerPage;
+    const pageResults = data.results.slice(startIdx, endIdx);
+
+    pageResults.forEach(place => {
         const businessDiv = document.createElement('div');
         businessDiv.className = `restaurants-grid-item`;
         
@@ -37,14 +44,17 @@ export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage)
             <p>Types: ${place.types ? place.types.join(', ') : 'N/A'}</p>
             <p>Address: ${place.vicinity || place.formatted_address || 'N/A'}</p>
             <a href="https://www.google.com/maps/place/?q=place_id:${place.place_id}" target="_blank">Read more</a>`;
-        businessesContainer.appendChild(businessDiv);
+        gridWrapper.appendChild(businessDiv);
     });
+
+    // Add grid to main container
+    mainContainer.appendChild(gridWrapper);
 
     // Add page counter below results
     const pageCounterBottom = document.createElement('div');
     pageCounterBottom.className = 'restaurants-page-counter';
     pageCounterBottom.textContent = `Page ${currentPage} of ${totalPages}`;
-    businessesContainer.appendChild(pageCounterBottom);
+    mainContainer.appendChild(pageCounterBottom);
 
     // Pagination controls
     const paginationControls = document.createElement('div');
@@ -53,10 +63,12 @@ export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage)
     // Previous button
     const prevBtn = document.createElement('button');
     prevBtn.textContent = 'Previous';
+    // Only enable "Previous" if not on the first page
     prevBtn.disabled = currentPage === 1;
+
     prevBtn.onclick = () => {
-        if (currentPage > 1 && typeof fetchRestaurantsPage === 'function') {
-            fetchRestaurantsPage('prev', currentPage - 1);
+        if (currentPage > 1) {
+            displayRestaurants(data, currentPage - 1, fetchRestaurantsPage);
         }
     };
     paginationControls.appendChild(prevBtn);
@@ -64,22 +76,32 @@ export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage)
     // Next button
     const nextBtn = document.createElement('button');
     nextBtn.textContent = 'Next';
-    // Only enable if next_page_token exists
-    nextBtn.disabled = !data.next_page_token;
+    // Only enable "Next" if there are more local results or a next_page_token
+    const moreLocal = endIdx < data.results.length;
+    const moreRemote = !!data.next_page_token;
+    nextBtn.disabled = !(moreLocal || moreRemote);
+
     nextBtn.onclick = () => {
-        if (data.next_page_token && typeof fetchRestaurantsPage === 'function') {
-            fetchRestaurantsPage(data.next_page_token, currentPage + 1);
+        if (moreLocal) {
+            // Just show the next local page
+            displayRestaurants(data, currentPage + 1, fetchRestaurantsPage);
+        } else if (moreRemote) {
+            // Fetch from API
+            fetchRestaurantsPage(data.next_page_token, 1); // 1 for new remote page
         }
     };
     paginationControls.appendChild(nextBtn);
 
-    businessesContainer.appendChild(paginationControls);
+    mainContainer.appendChild(paginationControls);
 
     // Inject responsive grid and card styles if not already present
     if (!document.getElementById('restaurants-grid-style')) {
         const style = document.createElement('style');
         style.id = 'restaurants-grid-style';
         style.textContent = `
+            #results {
+                padding-bottom: 4rem;
+            }
             .restaurants-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
@@ -137,7 +159,7 @@ export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage)
                 display: flex;
                 justify-content: center;
                 gap: 1rem;
-                margin: 1rem 0;
+                margin: 1rem 0 3rem 0; /* Add extra bottom margin to prevent being cut off by footer */
             }
         `;
         document.body.appendChild(style);
