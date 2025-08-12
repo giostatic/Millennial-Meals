@@ -23,7 +23,7 @@ const RestaurantForm = () => {
             const { lat, lng } = await fetchLatLng(locationObj);
 
             const data = await fetchGooglePlaces(values.categories, { lat, lng }, values.radius);
-            console.log('Nearby search results:', data); // <-- Added console log
+            // console.log('Nearby search results:', data); // <-- Added console log
             if (data && Array.isArray(data.results)) {
                 displayRestaurants(data);
             } else {

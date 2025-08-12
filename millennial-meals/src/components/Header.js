@@ -10,7 +10,7 @@ import {
     DropdownItem
 } from 'reactstrap';
 import { NavLink, useLocation } from 'react-router-dom';
-import MillenialMeals from '../app/assets/img/logo.jpg';
+import MillennialMeals from '../app/assets/img/logo.jpg';
 // import UserLoginForm from '../features/user/UserLoginForm';
 
 const Header = () => {
@@ -71,12 +71,12 @@ const Header = () => {
             >
                 <NavbarBrand className='ms-2 d-flex align-items-center' href='/'>
                     <img
-                        src={MillenialMeals}
+                        src={MillennialMeals}
                         alt='Millenial Meals Logo'
                         className='me-3 logo-img'
                         style={{ width: '40px', height: '40px', objectFit: 'cover' }}
                     />
-                    <h1 className='mt-1 mb-0 fs-3'>Millenial Meals</h1>
+                    <h1 className='mt-1 mb-0 fs-3'>Millennial Meals</h1>
                 </NavbarBrand>
                 <Nav className='ms-auto d-flex align-items-center' navbar>
                     <NavItem>
