@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 
-
 // SVG icons
 const PlusIcon = () => (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -88,8 +87,6 @@ export default function RecipesForm() {
         }
     }, [instructionFields.length]);
 
-    console.log("RecipesForm rendered");
-
     return (
         <>
         <form onSubmit={handleSubmit(onSubmit, (errors) => {
@@ -98,50 +95,39 @@ export default function RecipesForm() {
           <div className="form-inner">
             <div>
                 <label>Title of the Dish</label>
+                {errors.title && (
+                    <div className="error-message" style={{ marginBottom: 4 }}>Required</div>
+                )}
                 <div className="field-row">
-                    <input {...register('title', { required: true })} className="field-input full-width-input" />
+                    <input {...register('title', { required: "Required" })} className="field-input full-width-input" />
                     <span className="icon-btn-group" /> {/* Invisible icon placeholder */}
                 </div>
             </div>
             <div>
                 <label>Description of the Dish</label>
+                {errors.description && (
+                    <div className="error-message" style={{ marginBottom: 4 }}>Required</div>
+                )}
                 <div className="field-row">
-                    <textarea {...register('description', { required: true })} className="field-input full-width-input textarea-uniform" />
+                    <textarea {...register('description', { required: "Required" })} className="field-input full-width-input textarea-uniform" />
                     <span className="icon-btn-group" /> {/* Invisible icon placeholder */}
                 </div>
             </div>
             <div className="ingredients-section" id="ingredients-section">
                 <label>Ingredients</label>
+                {errors.ingredients && errors.ingredients.some(e => e?.ingredient) && (
+                    <div className="error-message" style={{ marginBottom: 4 }}>Required</div>
+                )}
                 <div className="vertical-fields">
                 {ingredientFields.map((field, index) => (
-                    <div
-                        key={field.id}
-                        className="field-row"
-                    >
+                    <div key={field.id} className="field-row">
                         <input
-                            {...register(`ingredients.${index}.ingredient`, {
-                                required: "Required",
-                                
-                            })}
+                            {...register(`ingredients.${index}.ingredient`, { required: "Required" })}
                             placeholder={`Ingredient #${index + 1}`}
                             onKeyDown={e => handleIngredientKeyDown(e, index)}
-                            ref={el => ingredientRefs.current[field.id] = el}
                             className="field-input full-width-input"
                         />
-                        {errors.ingredients?.[index]?.ingredient && (
-                            <span className="error-message">{errors.ingredients[index].ingredient.message}</span>
-                        )}
                         <span className="icon-btn-group">
-                            {ingredientFields.length > 1 && (
-                                <button
-                                    type="button"
-                                    onClick={() => removeIngredient(index)}
-                                    className="icon-btn shadow-btn"
-                                    aria-label="Remove ingredient"
-                                >
-                                    <MinusIcon />
-                                </button>
-                            )}
                             {index === ingredientFields.length - 1 && (
                                 <button
                                     type="button"
@@ -157,6 +143,16 @@ export default function RecipesForm() {
                                     <PlusIcon />
                                 </button>
                             )}
+                            {ingredientFields.length > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={() => removeIngredient(index)}
+                                    className="icon-btn shadow-btn"
+                                    aria-label="Remove ingredient"
+                                >
+                                    <MinusIcon />
+                                </button>
+                            )}
                         </span>
                     </div>
                 ))}
@@ -164,61 +160,53 @@ export default function RecipesForm() {
             </div>
             <div className="instructions-section" id="instructions-section">
                 <label>Instructions to Cooking the Dish</label>
+                {errors.instructions && errors.instructions.some(e => e?.instruction) && (
+                    <div className="error-message" style={{ marginBottom: 4 }}>Required</div>
+                )}
                 <div className="vertical-fields">
-                {instructionFields.map((field, index) => (
-                    <div
-                        key={field.id}
-                        className="field-row"
-                    >
-                        <textarea
-                            {...register(`instructions.${index}.instruction`, {
-                                required: "Required",
-                                
-                            })}
-                            placeholder={`Step #${index + 1}`}
-                            onKeyDown={e => handleInstructionKeyDown(e, index)}
-                            ref={el => instructionRefs.current[field.id] = el}
-                            className="field-input full-width-input textarea-uniform"
-                        />
-                        {errors.instructions?.[index]?.instruction && (
-                            <span className="error-message">{errors.instructions[index].instruction.message}</span>
-                        )}
-                        <span className="icon-btn-group">
-                            {instructionFields.length > 1 && (
-                                <button
-                                    type="button"
-                                    onClick={() => removeInstruction(index)}
-                                    className="icon-btn shadow-btn"
-                                    aria-label="Remove step"
-                                >
-                                    <MinusIcon />
-                                </button>
-                            )}
-                            {index === instructionFields.length - 1 && (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        const value = getValues(`instructions.${index}.instruction`);
-                                        if (value && value.trim() !== '') {
-                                            appendInstruction({ instruction: '' });
-                                        }
-                                    }}
-                                    className="icon-btn plus-btn shadow-btn"
-                                    aria-label="Add step"
-                                >
-                                    <PlusIcon />
-                                </button>
-                            )}
-                        </span>
-                    </div>
-                ))}
+                    {instructionFields.map((field, index) => (
+                        <div key={field.id} className="field-row">
+                            <input
+                                {...register(`instructions.${index}.instruction`, { required: "Required" })}
+                                placeholder={`Step #${index + 1}`}
+                                onKeyDown={e => handleInstructionKeyDown(e, index)}
+                                className="field-input full-width-input"
+                            />
+                            <span className="icon-btn-group">
+                                {index === instructionFields.length - 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const value = getValues(`instructions.${index}.instruction`);
+                                            if (value && value.trim() !== '') {
+                                                appendInstruction({ instruction: '' });
+                                            }
+                                        }}
+                                        className="icon-btn plus-btn shadow-btn"
+                                        aria-label="Add step"
+                                    >
+                                        <PlusIcon />
+                                    </button>
+                                )}
+                                {instructionFields.length > 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeInstruction(index)}
+                                        className="icon-btn shadow-btn"
+                                        aria-label="Remove step"
+                                    >
+                                        <MinusIcon />
+                                    </button>
+                                )}
+                            </span>
+                        </div>
+                    ))}
                 </div>
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit" className="submit-btn">Submit</button>
             {submitted && (
                 <div className="submit-message">Recipe submitted!</div>
             )}
-            <button onClick={() => alert('Test alert')}>Test Alert</button>
           </div>
         </form>
         <style>{styles}</style>
@@ -254,8 +242,7 @@ const styles = `
         width: 100%;
     }
     .field-input,
-    .full-width-input,
-    .textarea-uniform {
+    .full-width-input {
         flex: 1 1 0%;
         min-width: 0;
         box-sizing: border-box;
@@ -280,14 +267,10 @@ const styles = `
         margin-left: 4px;    /* Only add space if both icons are present */
     }
     .ingredients-section {
-        margin-bottom: 24px;
+        margin-bottom: 0; /* <-- Remove bottom margin to eliminate space above instructions */
     }
     .instructions-section {
         margin-bottom: 24px;
-    }
-    .textarea-uniform {
-        resize: vertical;
-        min-height: 38px;
     }
     .icon-placeholder {
         display: inline-block;
@@ -310,5 +293,21 @@ const styles = `
         color: #ef4444;
         font-size: 12px;
         margin-top: 4px;
+    }
+    .submit-btn {
+        background-color: #22c55e;
+        color: #fff;
+        border: none;
+        padding: 10px 28px;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 5px;
+        transition: background 0.15s;
+    }
+    .submit-btn:hover,
+    .submit-btn:focus {
+        background-color: #16a34a;
     }
 `;
