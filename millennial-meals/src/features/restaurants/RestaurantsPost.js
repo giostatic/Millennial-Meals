@@ -1,96 +1,46 @@
-
-export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage) {
-    // Get the main results container
+export async function displayRestaurants(data) {
     const mainContainer = document.getElementById('results');
     mainContainer.innerHTML = '';
 
-    // Calculate page info
-    const totalResults = data.results.length;
-    const resultsPerPage = 20;
-    const totalPages = Math.ceil(totalResults / resultsPerPage);
+    const pageResults = data.results.slice(0, 20);
 
-    // Create page counter element (top)
-    const pageCounterTop = document.createElement('div');
-    pageCounterTop.className = 'restaurants-page-counter';
-    pageCounterTop.textContent = `Page ${currentPage} of ${totalPages}`;
-    mainContainer.appendChild(pageCounterTop);
-
-    // Create grid wrapper
     const gridWrapper = document.createElement('div');
     gridWrapper.className = 'restaurants-grid';
 
-    // Display new results (Google Places API: data.results)
-    const startIdx = (currentPage - 1) * resultsPerPage;
-    const endIdx = startIdx + resultsPerPage;
-    const pageResults = data.results.slice(startIdx, endIdx);
+    // Helper to load image and resolve when loaded or errored
+    function loadImage(src) {
+        return new Promise((resolve) => {
+            const img = new window.Image();
+            img.onload = () => resolve(src);
+            img.onerror = () => resolve('https://via.placeholder.com/220x140?text=No+Image');
+            img.src = src;
+        });
+    }
 
-    pageResults.forEach(place => {
+    for (const place of pageResults) {
         const businessDiv = document.createElement('div');
         businessDiv.className = `restaurants-grid-item`;
-        
-        // Find the first photo_reference in the photos array, if any
+
         const firstPhoto = place.photos && place.photos.find(photo => photo.photo_reference);
 
-        const imageUrl = firstPhoto
-          ? `/api/photo?maxwidth=400&photoreference=${firstPhoto.photo_reference}`
-          : 'https://via.placeholder.com/220x140?text=No+Image';
+        let imageUrl = firstPhoto
+            ? `/api/photo?maxwidth=400&photoreference=${firstPhoto.photo_reference}`
+            : 'https://via.placeholder.com/220x140?text=No+Image';
+
+        // Wait for image to load or fallback
+        imageUrl = await loadImage(imageUrl);
 
         businessDiv.innerHTML = `
             <h3>${place.name}</h3>
-            <img src="${imageUrl}" alt="${place.name}" />
+            <img src="${imageUrl}" alt="${place.name}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/220x140?text=No+Image';" />
             <p>Rating: ${place.rating || 'N/A'}</p>
             <p>Types: ${place.types ? place.types.join(', ') : 'N/A'}</p>
             <p>Address: ${place.vicinity || place.formatted_address || 'N/A'}</p>
             <a href="https://www.google.com/maps/place/?q=place_id:${place.place_id}" target="_blank">Read more</a>`;
         gridWrapper.appendChild(businessDiv);
-    });
+    }
 
-    // Add grid to main container
     mainContainer.appendChild(gridWrapper);
-
-    // Add page counter below results
-    const pageCounterBottom = document.createElement('div');
-    pageCounterBottom.className = 'restaurants-page-counter';
-    pageCounterBottom.textContent = `Page ${currentPage} of ${totalPages}`;
-    mainContainer.appendChild(pageCounterBottom);
-
-    // Pagination controls
-    const paginationControls = document.createElement('div');
-    paginationControls.className = 'restaurants-pagination-controls';
-
-    // Previous button
-    const prevBtn = document.createElement('button');
-    prevBtn.textContent = 'Previous';
-    // Only enable "Previous" if not on the first page
-    prevBtn.disabled = currentPage === 1;
-
-    prevBtn.onclick = () => {
-        if (currentPage > 1) {
-            displayRestaurants(data, currentPage - 1, fetchRestaurantsPage);
-        }
-    };
-    paginationControls.appendChild(prevBtn);
-
-    // Next button
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = 'Next';
-    // Only enable "Next" if there are more local results or a next_page_token
-    const moreLocal = endIdx < data.results.length;
-    const moreRemote = !!data.next_page_token;
-    nextBtn.disabled = !(moreLocal || moreRemote);
-
-    nextBtn.onclick = () => {
-        if (moreLocal) {
-            // Just show the next local page
-            displayRestaurants(data, currentPage + 1, fetchRestaurantsPage);
-        } else if (moreRemote) {
-            // Fetch from API
-            fetchRestaurantsPage(data.next_page_token, 1); // 1 for new remote page
-        }
-    };
-    paginationControls.appendChild(nextBtn);
-
-    mainContainer.appendChild(paginationControls);
 
     // Inject responsive grid and card styles if not already present
     if (!document.getElementById('restaurants-grid-style')) {
@@ -148,18 +98,7 @@ export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage)
             .restaurants-grid-item a:hover {
                 text-decoration: underline;
             }
-            .restaurants-page-counter {
-                text-align: center;
-                margin: 0.5rem 0;
-                font-weight: 500;
-            }
-            .restaurants-pagination-controls {
-                display: flex;
-                justify-content: center;
-                gap: 1rem;
-                margin: 1rem 0 3rem 0; /* Add extra bottom margin to prevent being cut off by footer */
-            }
         `;
         document.body.appendChild(style);
     }
-};
+}

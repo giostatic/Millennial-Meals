@@ -13,18 +13,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    const data = req.body;
-    const timestamp = Date.now();
-    const blobName = `recipes/${timestamp}.json`;
+  const { filename, ...recipe } = req.body;
+  if (!filename) return res.status(400).json({ error: 'Missing filename' });
 
-    // Store the JSON as a blob
-    const { url } = await put(blobName, JSON.stringify(data, null, 2), {
+  try {
+    await put(filename, JSON.stringify(recipe), {
       access: 'public',
       contentType: 'application/json',
     });
 
-    res.status(200).json({ success: true, url });
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error('Blob store error:', err);
     res.status(500).json({ error: 'Failed to store recipe' });

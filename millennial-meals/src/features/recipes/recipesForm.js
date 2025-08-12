@@ -30,6 +30,10 @@ export default function RecipesForm() {
     const [submitted, setSubmitted] = useState(false); // NEW
     const [images, setImages] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [imagePreviews, setImagePreviews] = useState([]);
+
+    const [mealTime, setMealTime] = useState('');
+    const [base, setBase] = useState('');
 
     const ingredientRefs = useRef([]);
     const instructionRefs = useRef([]);
@@ -48,6 +52,7 @@ export default function RecipesForm() {
     const handleImageChange = async (e) => {
         const files = Array.from(e.target.files).slice(0, 3);
         const compressedImages = [];
+        const previews = [];
         for (const file of files) {
             const compressed = await imageCompression(file, {
                 maxSizeMB: 0.5,
@@ -55,13 +60,28 @@ export default function RecipesForm() {
                 useWebWorker: true,
             });
             compressedImages.push(compressed);
+
+            // Generate preview URL for compressed image
+            const previewUrl = URL.createObjectURL(compressed);
+            previews.push(previewUrl);
         }
         setImages(compressedImages);
+        setImagePreviews(previews);
+
+        // Clean up old previews
+        imagePreviews.forEach(url => URL.revokeObjectURL(url));
     };
 
     const onSubmit = async (data) => {
         data.ingredients = (data.ingredients || []).filter(i => i && i.ingredient && i.ingredient.trim() !== '');
         data.instructions = (data.instructions || []).filter(i => i && i.instruction && i.instruction.trim() !== '');
+        data.mealTime = mealTime;
+        data.base = base;
+
+        // --- Generate a unique ID for this recipe ---
+        const id = Date.now().toString();
+        data.id = id;
+
         setUploading(true);
         let imageUrls = [];
         try {
@@ -75,20 +95,20 @@ export default function RecipesForm() {
                 });
                 if (!res.ok) throw new Error('Image upload failed');
                 const { url } = await res.json();
-                imageUrls.push(url); // <-- collect the URL!
+                imageUrls.push(url);
             }
-            // Add image URLs to recipe data
             data.images = imageUrls;
 
-            // Store recipe JSON as before
+            // --- Store recipe JSON with unique filename ---
             const response = await fetch('/api/recipes-submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                // Save with unique filename using the id
+                body: JSON.stringify({ ...data, filename: `recipes/${id}.json` }),
             });
             if (!response.ok) throw new Error('Failed to store recipe');
             const result = await response.json();
-            alert("Form submitted and stored!");
+            alert("Form submitted and recipe saved!");
             setSubmitted(true);
             reset();
             setImages([]);
@@ -251,6 +271,59 @@ export default function RecipesForm() {
                     ))}
                 </div>
             </div>
+            {/* --- New dropdowns for meal time and base --- */}
+            <div style={{ display: 'flex', gap: '16px', marginBottom: '18px' }}>
+                <div style={{ flex: 1 }}>
+                    <label htmlFor="mealTime">Select a meal time</label>
+                    <select
+                        id="mealTime"
+                        value={mealTime}
+                        onChange={e => setMealTime(e.target.value)}
+                        required
+                        style={{ width: '100%', padding: '8px', borderRadius: '4px', marginTop: '4px' }}
+                    >
+                        <option value="">-- Choose --</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="dessert">Dessert</option>
+                    </select>
+                </div>
+                <div style={{ flex: 1 }}>
+                    <label htmlFor="base">Select the base</label>
+                    <select
+                        id="base"
+                        value={base}
+                        onChange={e => setBase(e.target.value)}
+                        required
+                        style={{ width: '100%', padding: '8px', borderRadius: '4px', marginTop: '4px' }}
+                    >
+                        <option value="">-- Choose --</option>
+                        <option value="poultry">Poultry</option>
+                        <option value="beef">Beef</option>
+                        <option value="pork">Pork</option>
+                        <option value="seafood">Seafood</option>
+                        <option value="plant-based">Plant-Based</option>
+                        <option value="pastries">Pastries</option>
+                        <option value="starches">Starches</option>
+                        <option value="drinks">Drinks</option>
+                    </select>
+                </div>
+            </div>
+            {/* --- End new dropdowns --- */}
+            {/* --- Image previews row --- */}
+            {imagePreviews.length > 0 && (
+                <div style={{ display: 'flex', gap: '12px', margin: '16px 0', justifyContent: 'center' }}>
+                    {imagePreviews.map((url, idx) => (
+                        <img
+                            key={idx}
+                            src={url}
+                            alt={`Preview ${idx + 1}`}
+                            style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 8, border: '1px solid #ccc' }}
+                        />
+                    ))}
+                </div>
+            )}
             <div>
                 <label>Upload up to 3 images</label>
                 <input

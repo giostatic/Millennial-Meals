@@ -1,15 +1,19 @@
-@import url(../stylesheet.css);
+@import './stylesheet.css';
 
 #description{
     text-align: center;
 }
 
-img{
+.recipe-card img, .slider-image img{
     border-radius: 5%;
     margin: auto;
     min-width: 250px;
     max-width: 350px;
     min-height: 100px;
+}
+
+.recipe-card {
+    margin: 10px;
 }
 
 #ingredients, #directions{

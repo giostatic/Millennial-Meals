@@ -37,7 +37,7 @@ const RestaurantForm = () => {
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "50%", margin: "0 auto" }}>
                 <FormGroup>
                     <Label htmlFor='categories'>Type what you what feel like eating or going to below
                         (for example: bars, burgers, pasta, pizza, or even boba!)</Label>
@@ -46,6 +46,7 @@ const RestaurantForm = () => {
                         placeholder='What are ya feelin?'
                         className='form-control'
                         id='categories'
+                        style={{ width: "100%" }}
                     />
                     {errors.categories && (
                         <p className='text-danger'>{errors.categories.message}</p>
@@ -58,6 +59,7 @@ const RestaurantForm = () => {
                         placeholder='address, city, or zip'
                         className='form-control'
                         id='location'
+                        style={{ width: "100%" }}
                     />
                     {errors.location && (
                         <p className='text-danger'>{errors.location.message}</p>
@@ -76,6 +78,7 @@ const RestaurantForm = () => {
                         className='form-control'
                         id='radius'
                         type='number'
+                        style={{ width: "100%" }}
                     />
                     {errors.radius && (
                         <p className='text-danger'>{errors.radius.message}</p>

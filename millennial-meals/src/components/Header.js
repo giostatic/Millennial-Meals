@@ -67,13 +67,13 @@ const Header = () => {
                 sticky='top'
                 expand='md'
                 className="d-flex align-items-center"
-                
+                color='primary'
             >
                 <NavbarBrand className='ms-2 d-flex align-items-center' href='/'>
                     <img
                         src={MillenialMeals}
                         alt='Millenial Meals Logo'
-                        className='me-3'
+                        className='me-3 logo-img'
                         style={{ width: '40px', height: '40px', objectFit: 'cover' }}
                     />
                     <h1 className='mt-1 mb-0 fs-3'>Millenial Meals</h1>

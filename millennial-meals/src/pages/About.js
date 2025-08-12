@@ -1,5 +1,5 @@
 const About = () => (
-  <main style={{ padding: "2rem" }}>
+  <main style={{ padding: '20px', textAlign: 'center' }}>
     <h1>About Millennial Meals</h1>
     <p>
       Millennial Meals is your go-to platform for discovering easy, delicious recipes and finding great places to eat nearby.

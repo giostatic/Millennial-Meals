@@ -40,7 +40,7 @@ header h1{
   color: black;
   display: inline-block;
   margin-left: 20px;
-  top: 8px;
+
   position: relative;
 }
 
@@ -114,3 +114,16 @@ main{
   transform: scale(1.05);
 }
 
+.logo-img {
+    min-width: 40px !important;
+    min-height: 40px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+.recipe-card {
+    margin: 10px;
+
+}
