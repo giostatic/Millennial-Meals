@@ -14,6 +14,12 @@ import beefHeader from '../app/assets/img/Beef-header.png';
 import porkHeader from '../app/assets/img/Pork-header.png';
 import plantBasedHeader from '../app/assets/img/plant-based-header.png';
 
+// Add new category images
+import breakfastHeader from '../app/assets/img/breakfast-header.jpg';
+import lunchHeader from '../app/assets/img/lunch-header.jpg';
+import dinnerHeader from '../app/assets/img/dinner-header.jpg';
+import dessertHeader from '../app/assets/img/dessert-header.jpg';
+
 const RecipesPage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   // Dummy goSomewhere function for the button
@@ -25,6 +31,50 @@ const RecipesPage = () => {
   return (
     <>
       <main>
+        {/* New meal categories section */}
+        <section id="meal-categories">
+          <div className="slider-image">
+            <a href="recipes/breakfast.html">
+              <img
+                src={breakfastHeader}
+                alt="Breakfast dishes"
+                title="Breakfast dishes"
+              />
+              <div className="slider-overlay">Breakfast</div>
+            </a>
+          </div>
+          <div className="slider-image">
+            <a href="recipes/lunch.html">
+              <img
+                src={lunchHeader}
+                alt="Lunch dishes"
+                title="Lunch dishes"
+              />
+              <div className="slider-overlay">Lunch</div>
+            </a>
+          </div>
+          <div className="slider-image">
+            <a href="recipes/dinner.html">
+              <img
+                src={dinnerHeader}
+                alt="Dinner dishes"
+                title="Dinner dishes"
+              />
+              <div className="slider-overlay">Dinner</div>
+            </a>
+          </div>
+          <div className="slider-image">
+            <a href="recipes/dessert.html">
+              <img
+                src={dessertHeader}
+                alt="Dessert dishes"
+                title="Dessert dishes"
+              />
+              <div className="slider-overlay">Dessert</div>
+            </a>
+          </div>
+        </section>
+        {/* Existing protein-base section */}
         <section id="protein-base">
           <div className="slider-image">
             <a href="recipes/ribs.html">

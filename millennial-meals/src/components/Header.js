@@ -100,7 +100,7 @@ const Header = () => {
                                     to='/restaurants'
                                     style={{ paddingLeft: '10px' }}
                                 >
-                                    <i className='fa fa-cutlery fa-lg' /> Eating out
+                                    <i className='fa fa-cutlery fa-lg' /> Dining Out
                                 </NavLink>
                             </NavItem>
                             <NavItem
@@ -116,14 +116,14 @@ const Header = () => {
                                     to='/recipes'
                                     style={{ paddingLeft: '10px', cursor: 'pointer' }}
                                 >
-                                    <i className='fa fa-book fa-lg' /> Recipes
+                                    <i className='fa fa-book fa-lg' /> Dining In
                                 </NavLink>
                                 {recipesDropdownOpen && (
                                     <div
                                         style={{
                                             position: 'absolute',
                                             top: '100%',
-                                            transform: 'translateX(-37%)',
+                                            transform: 'translateX(-28.5%)',
                                             background: '#fff',
                                             minWidth: '130px',
                                             maxWidth: '200px',
@@ -171,7 +171,7 @@ const Header = () => {
                                         className={isActiveDropdown('/restaurants') ? 'active-custom' : ''}
                                         style={{ paddingLeft: '10px' }}
                                     >
-                                        <i className='fa fa-cutlery fa-lg' /> Eating out
+                                        <i className='fa fa-cutlery fa-lg' /> Dining Out
                                     </DropdownItem>
                                     <div
                                         onMouseEnter={handleRecipesMouseEnter}
@@ -192,7 +192,7 @@ const Header = () => {
                                                 className={isActiveDropdown('/recipes') ? 'active-custom' : ''}
                                                 style={{ cursor: 'pointer', paddingLeft: 10 }}
                                             >
-                                                <i className='fa fa-book fa-lg' /> Recipes
+                                                <i className='fa fa-book fa-lg' /> Dining In
                                             </DropdownToggle>
                                             <DropdownMenu
                                                 className="dropdown-menu-end position-absolute"
@@ -203,6 +203,7 @@ const Header = () => {
                                                 <DropdownItem href="#dinner">Beef</DropdownItem>
                                                 <DropdownItem href="#dinner">Pork</DropdownItem>
                                                 <DropdownItem href="#dinner">Plant-Based</DropdownItem>
+                                                
                                             </DropdownMenu>
                                         </Dropdown>
                                     </div>

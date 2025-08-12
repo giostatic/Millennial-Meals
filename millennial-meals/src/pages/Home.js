@@ -6,10 +6,10 @@ const Home = () => (
         <p>Discover delicious recipes or find great restaurants near you!</p>
         <div style={{ marginTop: '30px' }}>
             <Link to="/recipes" style={{ margin: '0 20px', fontSize: '18px' }}>
-                Go to Recipes
+                Dining In
             </Link>
             <Link to="/restaurants" style={{ margin: '0 20px', fontSize: '18px' }}>
-                Go to Restaurants
+                Dining Out
             </Link>
         </div>
     </div>
