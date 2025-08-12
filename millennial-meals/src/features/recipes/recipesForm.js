@@ -1,3 +1,4 @@
+import imageCompression from 'browser-image-compression';
 import { useRef, useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -27,6 +28,8 @@ export default function RecipesForm() {
     });
 
     const [submitted, setSubmitted] = useState(false); // NEW
+    const [images, setImages] = useState([]);
+    const [uploading, setUploading] = useState(false);
 
     const ingredientRefs = useRef([]);
     const instructionRefs = useRef([]);
@@ -41,14 +44,59 @@ export default function RecipesForm() {
         name: 'instructions'
     });
 
-    const onSubmit = (data) => {
+    // Handle image selection and compression
+    const handleImageChange = async (e) => {
+        const files = Array.from(e.target.files).slice(0, 3);
+        const compressedImages = [];
+        for (const file of files) {
+            const compressed = await imageCompression(file, {
+                maxSizeMB: 0.5,
+                maxWidthOrHeight: 1024,
+                useWebWorker: true,
+            });
+            compressedImages.push(compressed);
+        }
+        setImages(compressedImages);
+    };
+
+    const onSubmit = async (data) => {
         data.ingredients = (data.ingredients || []).filter(i => i && i.ingredient && i.ingredient.trim() !== '');
         data.instructions = (data.instructions || []).filter(i => i && i.instruction && i.instruction.trim() !== '');
-        alert("Form submitted!");
-        console.log("SUBMIT DATA:", data);
-        setSubmitted(true);
-        reset();
-        setTimeout(() => setSubmitted(false), 3000);
+        setUploading(true);
+        let imageUrls = [];
+        try {
+            // Upload images to blob store
+            for (const img of images) {
+                const formData = new FormData();
+                formData.append('file', img);
+                const res = await fetch('/api/recipes-image-upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!res.ok) throw new Error('Image upload failed');
+                const { url } = await res.json();
+                imageUrls.push(url); // <-- collect the URL!
+            }
+            // Add image URLs to recipe data
+            data.images = imageUrls;
+
+            // Store recipe JSON as before
+            const response = await fetch('/api/recipes-submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            if (!response.ok) throw new Error('Failed to store recipe');
+            const result = await response.json();
+            alert("Form submitted and stored!");
+            setSubmitted(true);
+            reset();
+            setImages([]);
+            setTimeout(() => setSubmitted(false), 3000);
+        } catch (err) {
+            alert("Error: " + err.message);
+        }
+        setUploading(false);
     };
 
     // Handler for Enter key to add ingredient
@@ -203,7 +251,24 @@ export default function RecipesForm() {
                     ))}
                 </div>
             </div>
-            <button type="submit" className="submit-btn">Submit</button>
+            <div>
+                <label>Upload up to 3 images</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageChange}
+                    disabled={images.length >= 3}
+                />
+                <div>
+                    {images.map((img, idx) => (
+                        <span key={idx}>{img.name}</span>
+                    ))}
+                </div>
+            </div>
+            <button type="submit" className="submit-btn" disabled={uploading}>
+                {uploading ? "Uploading..." : "Submit"}
+            </button>
             {submitted && (
                 <div className="submit-message">Recipe submitted!</div>
             )}

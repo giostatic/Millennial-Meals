@@ -13,10 +13,10 @@ async function fetchLatLng({ address, city, zip }) {
     }
 
     // For development, use the full backend URL if your frontend and backend run on different ports
-    const url = `http://localhost:5000/api/geocode?address=${encodeURIComponent(query)}`;
+    // const url = `http://localhost:3000/api/geocode?address=${encodeURIComponent(query)}`;
 
     // For production or if using a proxy in package.json, use the relative path:
-    // const url = `/api/geocode?address=${encodeURIComponent(query)}`;
+    const url = `/api/geocode?address=${encodeURIComponent(query)}`;
 
     console.log('Geocoding URL:', url);
 

@@ -12,7 +12,7 @@ export async function fetchGooglePlaces(term, location, radius) {
     // for production
     // const url = `${apiEndPoint}?location=${location.lat},${location.lng}&radius=${radiusInMeters}&keyword=${encodeURIComponent(term)}&key=${key}`;
 
-    const url = `http://localhost:5000/api/places?location=${location.lat},${location.lng}&radius=${radiusInMeters}&keyword=${encodeURIComponent(term)}`;
+    const url = `/api/places?location=${location.lat},${location.lng}&radius=${radiusInMeters}&keyword=${encodeURIComponent(term)}`;
 
 
     const response = await fetch(url);
@@ -25,7 +25,7 @@ export async function fetchGooglePlaces(term, location, radius) {
 export async function fetchRestaurantsPage(nextPageToken) {
     // For production, use your backend endpoint and pass the pagetoken
     // Example: const url = `https://your-backend.com/api/places?pagetoken=${nextPageToken}`;
-    const url = `http://localhost:5000/api/places?pagetoken=${nextPageToken}`;
+    const url = `/api/places?pagetoken=${nextPageToken}`;
 
     const response = await fetch(url);
     if (!response.ok) {

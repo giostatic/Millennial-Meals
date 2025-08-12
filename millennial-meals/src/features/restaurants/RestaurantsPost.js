@@ -1,5 +1,3 @@
-import {key} from '../../components/apiKey';
-
 
 export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage) {
     // Get the main results container
@@ -34,7 +32,7 @@ export function displayRestaurants (data, currentPage = 1, fetchRestaurantsPage)
         const firstPhoto = place.photos && place.photos.find(photo => photo.photo_reference);
 
         const imageUrl = firstPhoto
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${firstPhoto.photo_reference}&key=${key}`
+          ? `/api/photo?maxwidth=400&photoreference=${firstPhoto.photo_reference}`
           : 'https://via.placeholder.com/220x140?text=No+Image';
 
         businessDiv.innerHTML = `

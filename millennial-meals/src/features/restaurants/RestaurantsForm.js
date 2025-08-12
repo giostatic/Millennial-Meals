@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { Button, Modal, ModalHeader, ModalBody, FormGroup, Label } from "reactstrap";
+import { Button, FormGroup, Label } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { displayRestaurants } from "./RestaurantsPost";
 import { fetchGooglePlaces } from "./fetchPlaces";
