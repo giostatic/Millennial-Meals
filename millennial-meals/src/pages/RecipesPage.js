@@ -34,7 +34,7 @@ const RecipesPage = () => {
   return (
     <main style={{ paddingBottom: "60px" }}>
       <section id="buttons">
-        <h2>Don't know what to pick?</h2>
+        <h1>Recipe Explorer</h1>
         <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "20px" }}>
           <Button color="primary" onClick={goSomewhere}>
             Click here to get a random recipe
