@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -15,6 +16,7 @@ function App() {
   return (
     <div className="App">
       <Header />
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -23,9 +25,10 @@ function App() {
         <Route path="/recipes/:category/:id" element={<RecipeView />} />
         <Route path="/restaurants" element={<Restaurants />} />
         <Route path="/recipesForm" element={<RecipesForm />} />
-        
       </Routes>
       <Footer />
+      <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
