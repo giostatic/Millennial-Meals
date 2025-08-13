@@ -157,9 +157,12 @@ export default function RecipesForm() {
 
     return (
         <>
-        <form onSubmit={handleSubmit(onSubmit, (errors) => {
+        <form
+          onSubmit={handleSubmit(onSubmit, (errors) => {
             console.log("FORM ERRORS:", errors);
-        })}>
+          })}
+          style={{ paddingBottom: "90px" }} // <-- Add this line
+        >
           <div className="form-inner">
             <div>
                 <label>Title of the Dish</label>

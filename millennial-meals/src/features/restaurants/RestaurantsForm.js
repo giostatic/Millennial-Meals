@@ -9,8 +9,10 @@ import fetchLatLng from "./fetchLocation";
 
 const RestaurantForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = async (values) => {
+        setLoading(true);
         try {
             // Simple check: if input is all digits, treat as zip; else as address/city
             let locationObj = {};
@@ -32,11 +34,18 @@ const RestaurantForm = () => {
         } catch (error) {
             console.error('Error code:', error);
             alert('An error occurred while fetching the search results.');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <>
+            {loading && (
+                <div style={{textAlign: "center", padding: "2rem", fontSize: "1.2rem"}}>
+                    Loading restaurants...
+                </div>
+            )}
             <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: "50%", margin: "0 auto" }}>
                 <FormGroup>
                     <Label htmlFor='categories'>Type what you what feel like eating or going to below
