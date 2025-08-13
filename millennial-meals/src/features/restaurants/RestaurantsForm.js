@@ -6,7 +6,6 @@ import { displayRestaurants } from "./RestaurantsPost";
 import { fetchGooglePlaces } from "./fetchPlaces";
 import fetchLatLng from "./fetchLocation";
 
-
 const RestaurantForm = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false);
@@ -25,18 +24,20 @@ const RestaurantForm = () => {
             const { lat, lng } = await fetchLatLng(locationObj);
 
             const data = await fetchGooglePlaces(values.categories, { lat, lng }, values.radius);
-            // console.log('Nearby search results:', data); // <-- Added console log
+            
             if (data && Array.isArray(data.results)) {
-                displayRestaurants(data);
+                // Pass the setLoading function to displayRestaurants so it can control when loading ends
+                await displayRestaurants(data, setLoading);
             } else {
                 console.error('Places data is missing or not an array:', data);
+                setLoading(false);
             }
         } catch (error) {
             console.error('Error code:', error);
             alert('An error occurred while fetching the search results.');
-        } finally {
             setLoading(false);
         }
+        // Remove the finally block since displayRestaurants will handle setting loading to false
     };
 
     return (

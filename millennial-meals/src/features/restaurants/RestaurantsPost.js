@@ -1,4 +1,4 @@
-export async function displayRestaurants(data) {
+export async function displayRestaurants(data, setLoading) {
     const mainContainer = document.getElementById('results');
     mainContainer.innerHTML = '';
 
@@ -41,6 +41,11 @@ export async function displayRestaurants(data) {
     }
 
     mainContainer.appendChild(gridWrapper);
+
+    // Set loading to false only after all restaurants are rendered
+    if (setLoading) {
+        setLoading(false);
+    }
 
     // Inject responsive grid and card styles if not already present
     if (!document.getElementById('restaurants-grid-style')) {
